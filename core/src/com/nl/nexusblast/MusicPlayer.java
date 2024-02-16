@@ -5,14 +5,14 @@ import com.badlogic.gdx.audio.Music;
 
 public class MusicPlayer {
     Music music;
-    MusicPlayer(String path){
+    public MusicPlayer(String path){
         AssetManager assetManager = new AssetManager();
         assetManager.load(path, Music.class);
         assetManager.finishLoading(); // Wacht tot de muziek geladen is voordat je verdergaat
         music = assetManager.get(path, Music.class);
     }
 
-    public void ManageMusic(String action){
+    public void manageMusic(String action){
         switch (action) {
             case "play":
                 music.play();
