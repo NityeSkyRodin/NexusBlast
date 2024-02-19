@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.nl.nexusblast.MusicPlayer;
+import com.nl.nexusblast.player.Bullet;
 import com.nl.nexusblast.player.Player;
-import jdk.jfr.internal.consumer.EventLog;
+import com.nl.nexusblast.watermark.Watermark;
 
 public class GameScreen implements Screen, InputProcessor {
     MusicPlayer music = new MusicPlayer("NEXBLASTMAIN.mp3");
@@ -20,7 +21,11 @@ public class GameScreen implements Screen, InputProcessor {
     private SpriteBatch batch;
     private boolean[] keysPressed = new boolean[4];
     private Player player = new Player(700, 200);
+
+    private Bullet bullet = new Bullet(player.getX(), player.getY());
     private Sprite sprite = new Sprite(player.getTexture());
+
+    private Sprite sprite2 = new Sprite(bullet.getTexture());
 
     public GameScreen() {
         stage = new Stage(new ScreenViewport());
@@ -31,13 +36,12 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void show() {
         music.manageMusic("play");
+        stage.addActor(new Watermark().getWatermark());
     }
 
     @Override
     public void render(float v) {
         update();
-
-        // Tekenen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
@@ -45,9 +49,9 @@ public class GameScreen implements Screen, InputProcessor {
         sprite.setRotation(player.getRotation());
         sprite.draw(batch);
         batch.end();
+        stage.draw();
     }
     private void update() {
-        // Beweging van de speler verwerken op basis van de ingedrukte toetsen
         if (keysPressed[0]) player.moveUp();
         if (keysPressed[1]) player.moveLeft();
         if (keysPressed[2]) player.moveDown();
@@ -100,7 +104,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        // Wanneer een toets wordt losgelaten, stel de juiste vlag in op false
         switch (keycode) {
             case Input.Keys.W:
                 keysPressed[0] = false;
@@ -125,7 +128,12 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int i, int i1, int i2, int i3) {
-        return false;
+        System.out.println(i + " " + i1 + " " + i2 + " " + i3);
+        batch.begin();
+        sprite2.setPosition(player.getX(), player.getY());
+        sprite2.draw(batch);
+        batch.end();
+        return true;
     }
 
     @Override
@@ -145,7 +153,9 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean mouseMoved(int i, int i1) {
-        return false;
+        System.out.println(i + " " + i1);
+        player.turnPlayer(i, i1);
+        return true;
     }
 
     @Override

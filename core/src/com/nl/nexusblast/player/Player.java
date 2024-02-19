@@ -1,11 +1,12 @@
 package com.nl.nexusblast.player;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class Player {
+
+public class Player extends Sprite {
     private float x, y;
-    private float speed = 10f; // Snelheid van de speler
+    private float speed = 7.5f;
 
     private float rotation = 0;
 
@@ -18,10 +19,15 @@ public class Player {
 
     public void turnPlayer(boolean up) {
         if (up) {
-            rotation += 5;
+            rotation += 15;
         } else {
-            rotation -= 5;
+            rotation -= 15;
         }
+    }
+
+    public void turnPlayer(float i, float i1) {
+        float angle = (float)Math.toDegrees(Math.atan2(i1 - y, i - x));
+        rotation = angle;
     }
 
     public void moveLeft() {
